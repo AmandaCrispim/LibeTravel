@@ -1,26 +1,38 @@
 package br.edu.univille.poo.libetravel.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-//o voo contem dados como data de ida e volta, aeroporto,companhia aerea e valor
-@Data
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Voo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public String data;
-    public String hora;
-    public String aerporto;
-    public String companhiaArea;
-    //aeroporto de embarque: Aeroporto
-    //aeroporto de desembarque: Aeroporto
+    private String companhiaAerea;
 
-    @ManyToMany(mappedBy = "voos")
-    private Set<Passagem> passagens;
+    private String data;
+    private String hora;
+
+    @ManyToOne
+    @JoinColumn(name = "aeronave_id")
+    private Aeronave aeronave;
+
+    @ManyToOne
+    @JoinColumn(name = "aeroporto_embarque_id")
+    private Aeroporto aeroportoEmbarque;
+
+    @ManyToOne
+    @JoinColumn(name = "aeroporto_desembarque_id")
+    private Aeroporto aeroportoDesembarque;
+
+    private Double valor; // Valor base do voo.
 }
