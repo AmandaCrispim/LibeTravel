@@ -1,7 +1,7 @@
 package br.edu.univille.poo.libetravel.controllers;
 
 import br.edu.univille.poo.libetravel.entities.Aeronave;
-import br.edu.univille.poo.libetravel.services.AeroportoService;
+import br.edu.univille.poo.libetravel.services.AeronaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 public class AeronaveController {
 
     @Autowired
-    private AeroportoService service;
+    private AeronaveService service;
 
     @GetMapping
     public ResponseEntity<List<Aeronave>> listarAeronaves() {
@@ -51,7 +51,7 @@ public class AeronaveController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarAeronave(@PathVariable Long id) {
         try {
-            service.deletarAeronaveid);
+            service.deletarAeronave(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
