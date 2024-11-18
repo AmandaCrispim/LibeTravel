@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -15,10 +18,39 @@ public class Assento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String identificador; // Fileiras da esquerda: ABC, fileiras da direita EFG, todas possuem 10 assentos cada. A01, A02...
-    private Double preco; // Valor do assento, janelas (A e G) são os mais caros, meio (B e F) os mais baratos e os dos corredores (C e E) o meio termo.
+    private String identificador;
+    private Double preco;
 
     @ManyToOne
     @JoinColumn(name = "aeronave_id")
     private Aeronave aeronave;
+
+    public static List<Assento> gerarAssentos(Aeronave aeronave, double precoJanela, double precoMeio, double precoCorredor) {
+        List<Assento> assentos = new ArrayList<>();
+        String[] fileiras = {"A", "B", "C", "E", "F", "G"};
+
+        for (String fileira : fileiras) {
+            for (int i = 1; i <= 10; i++) {
+                String identificador = fileira + String.format("%02d", i); // Esperado: A01, B10
+                double preco;
+
+                if (fileira.equals("A") || fileira.equals("G")) {
+                    preco = precoJanela;
+                } else if (fileira.equals("B") || fileira.equals("F")) {
+                    preco = precoMeio;
+                } else {
+                    preco = precoCorredor;
+                }
+
+                Assento assento = new Assento();
+                assento.setIdentificador(identificador);
+                assento.setPreco(preco);
+                assento.setAeronave(aeronave);
+
+                assentos.add(assento);
+            }
+        }
+
+        return assentos;
+    }
 }
