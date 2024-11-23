@@ -19,10 +19,6 @@ public class Passagem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer quantidadePessoas;
-
-    private Double valorTotal; // Valor do voo + valor dos assentos.
-
     @ManyToMany
     @JoinTable(
             name = "passagem_voo",
@@ -31,7 +27,26 @@ public class Passagem {
     )
     private List<Voo> voos;
 
+    @ManyToMany
+    @JoinTable(
+            name = "passagem_assento",
+            joinColumns = @JoinColumn(name = "passagem_id"),
+            inverseJoinColumns = @JoinColumn(name = "assento_id")
+    )
+    private List<Assento> assentos;
+
+    private int quantidadePessoas;
+    private Double valorFinal;
+
     @ElementCollection
-    @CollectionTable(name = "dados_passageiros", joinColumns = @JoinColumn(name = "passagem_id"))
-    private List<DadosPassageiros> dadosPassageiros; // Dados de cada ocupante.
+    @CollectionTable(name = "passageiro_dados", joinColumns = @JoinColumn(name = "passagem_id"))
+    private List<DadosPassageiro> dadosOcupantes;
+
+    @Data
+    @Embeddable
+    public static class DadosPassageiro {
+        private String nome;
+        private String dataNascimento;
+        private String cpf;
+    }
 }

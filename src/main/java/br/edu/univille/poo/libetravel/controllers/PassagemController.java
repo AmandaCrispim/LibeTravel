@@ -14,47 +14,16 @@ import java.util.List;
 public class PassagemController {
 
     @Autowired
-    private PassagemService service;
-
-    @GetMapping
-    public ResponseEntity<List<Passagem>> listarPassagens() {
-        List<Passagem> passagens = service.listarPassagens();
-        return ResponseEntity.ok(passagens);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Passagem> buscarPassagemPorId(@PathVariable Long id) {
-        try {
-            Passagem passagem = service.buscarPassagemPorId(id);
-            return ResponseEntity.ok(passagem);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    private PassagemService passagemService;
 
     @PostMapping
     public ResponseEntity<Passagem> criarPassagem(@RequestBody Passagem passagem) {
-        Passagem novaPassagem = service.criarPassagem(passagem);
-        return ResponseEntity.status(HttpStatus.CREATED).body(novaPassagem);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Passagem> atualizarPassagem(@PathVariable Long id, @RequestBody Passagem passagem) {
         try {
-            Passagem passagemAtualizada = service.atualizarPassagem(id, passagem);
-            return ResponseEntity.ok(passagemAtualizada);
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarPassagem(@PathVariable Long id) {
-        try {
-            service.deletarPassagem(id);
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            Passagem novaPassagem = passagemService.criarPassagem(passagem);
+            return ResponseEntity.status(HttpStatus.CREATED).body(novaPassagem);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 }
+
