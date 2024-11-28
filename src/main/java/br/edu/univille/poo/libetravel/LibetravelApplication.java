@@ -3,12 +3,14 @@ package br.edu.univille.poo.libetravel;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @SpringBootApplication
+@EntityScan(basePackages = "br.edu.univille.poo.libetravel.entities")
 public class LibetravelApplication {
 
 	public static void main(String[] args) {
