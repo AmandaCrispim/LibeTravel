@@ -16,14 +16,16 @@ public class PassagemController {
     @Autowired
     private PassagemService passagemService;
 
-    @PostMapping
-    public ResponseEntity<Passagem> criarPassagem(@RequestBody Passagem passagem) {
+    @PostMapping("/lote")
+    public ResponseEntity<String> criarPassagens(@RequestBody List<Passagem> passagens) {
         try {
-            Passagem novaPassagem = passagemService.criarPassagem(passagem);
-            return ResponseEntity.status(HttpStatus.CREATED).body(novaPassagem);
+            List<Passagem> passagensCriadas = passagemService.criarPassagens(passagens);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Passagens criadas com sucesso!");
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
+
+
 

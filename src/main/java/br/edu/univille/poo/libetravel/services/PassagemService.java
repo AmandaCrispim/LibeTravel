@@ -1,12 +1,12 @@
 package br.edu.univille.poo.libetravel.services;
 
-import br.edu.univille.poo.libetravel.entities.Assento;
 import br.edu.univille.poo.libetravel.entities.Passagem;
 import br.edu.univille.poo.libetravel.entities.Voo;
 import br.edu.univille.poo.libetravel.repositories.PassagemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,30 +21,40 @@ public class PassagemService {
     @Autowired
     private AssentoService assentoService;
 
-    public Passagem criarPassagem(Passagem passagem) {
-        if (passagem.getVoos().isEmpty() || passagem.getVoos().size() > 2) {
-            throw new RuntimeException("Uma passagem deve conter no mínimo 1 e no máximo 2 voos.");
-        }
-
-        if (passagem.getQuantidadePessoas() != passagem.getAssentos().size()) {
-            throw new RuntimeException("A quantidade de assentos selecionados deve ser igual ao número de pessoas.");
-        }
-
+    public double calcularValorTotal(Passagem passagem) {
         double valorTotal = passagem.getVoos().stream()
                 .mapToDouble(Voo::getValor)
                 .sum();
 
-        double valorAssentos = passagem.getAssentos().stream()
-                .mapToDouble(Assento::getPreco)
-                .sum();
+        double valorAssento = passagem.getAssentos().get(0).getPreco();
 
-        passagem.setValorFinal(valorTotal + valorAssentos);
+        return valorTotal + valorAssento;
+    }
 
-        if (passagem.getDadosOcupantes().size() != passagem.getQuantidadePessoas()) {
-            throw new RuntimeException("Dados de todos os ocupantes devem ser preenchidos.");
+    public List<Passagem> criarPassagens(List<Passagem> passagens) {
+        List<Passagem> passagensCriadas = new ArrayList<>();
+
+        for (Passagem passagem : passagens) {
+            if (passagem.getVoos().isEmpty() || passagem.getVoos().size() > 2) {
+                throw new RuntimeException("Uma passagem deve conter no mínimo 1 e no máximo 2 voos.");
+            }
+
+            if (passagem.getAssentos().size() != 1) {
+                throw new RuntimeException("Cada passagem deve conter apenas um assento.");
+            }
+
+            if (passagem.getDadosPassageiro() == null) {
+                throw new RuntimeException("Dados do passageiro devem ser preenchidos.");
+            }
+
+            double valorTotal = calcularValorTotal(passagem);
+
+            passagem.setValorFinal(valorTotal);
+
+            passagensCriadas.add(passagemRepository.save(passagem));
         }
 
-        return passagemRepository.save(passagem);
+        return passagensCriadas;
     }
 }
 
