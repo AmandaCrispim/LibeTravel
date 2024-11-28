@@ -35,18 +35,10 @@ public class Passagem {
     )
     private List<Assento> assentos;
 
-    private int quantidadePessoas;
+    @OneToOne
+    @JoinColumn(name = "dados_passageiro_id", nullable = false)
+    private DadosPassageiros dadosPassageiro;
+
     private Double valorFinal;
-
-    @ElementCollection
-    @CollectionTable(name = "passageiro_dados", joinColumns = @JoinColumn(name = "passagem_id"))
-    private List<DadosPassageiro> dadosOcupantes;
-
-    @Data
-    @Embeddable
-    public static class DadosPassageiro {
-        private String nome;
-        private String dataNascimento;
-        private String cpf;
-    }
 }
+

@@ -22,7 +22,11 @@ public class Aeronave {
     @OneToMany(mappedBy = "aeronave", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Assento> assentos;
 
-    @ManyToMany(mappedBy = "aeronaves")
+    @ManyToMany
+    @JoinTable(
+            name = "aeroporto_aeronave",
+            joinColumns = @JoinColumn(name = "aeronave_id"),
+            inverseJoinColumns = @JoinColumn(name = "aeroporto_id")
+    )
     private List<Aeroporto> aeroportos;
-
 }

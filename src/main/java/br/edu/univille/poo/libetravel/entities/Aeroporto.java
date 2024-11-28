@@ -22,11 +22,12 @@ public class Aeroporto {
     private String estado;
     private String pais;
 
-    @ManyToMany
-    @JoinTable(
-            name = "aeroporto_aeronave",
-            joinColumns = @JoinColumn(name = "aeroporto_id"),
-            inverseJoinColumns = @JoinColumn(name = "aeronave_id")
-    )
+    @ManyToMany(mappedBy = "aeroportos")
     private List<Aeronave> aeronaves;
+
+    @OneToMany(mappedBy = "aeroportoEmbarque")
+    private List<Voo> voosDeEmbarque;
+
+    @OneToMany(mappedBy = "aeroportoDesembarque")
+    private List<Voo> voosDeDesembarque;
 }
